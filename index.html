@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soap Smooth - Natural Handmade Soaps</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Fredoka+One:wght@400&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h2>Soap Smooth</h2>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <button class="notifications-btn" onclick="toggleNotifications()">
+                        🔔 <span class="notification-badge" id="notificationBadge">3</span>
+                    </button>
+                    <button class="cart-btn" onclick="toggleCart()">
+                        🛒 <span class="cart-count">0</span>
+                    </button>
+                    <button class="order-btn">SHOP NOW</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Shopping Cart Modal -->
+    <div id="cart-modal" class="cart-modal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h2>🛒 Your Soap Collection</h2>
+                <button class="close-cart" onclick="toggleCart()">&times;</button>
+            </div>
+            <div class="cart-empty" id="cart-empty" style="display: none;">
+                <div class="empty-cart-icon">🧼</div>
+                <h3>Your cart is empty</h3>
+                <p>Add some amazing soaps to get started!</p>
+            </div>
+            <div class="cart-items-container">
+                <div class="cart-items" id="cart-items"></div>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-summary">
+                    <div class="cart-subtotal">
+                        <span>Subtotal: $<span id="cart-subtotal">0.00</span></span>
+                    </div>
+                    <div class="cart-savings" id="cart-savings" style="display: none;">
+                        <span>You Save: $<span id="savings-amount">0.00</span></span>
+                    </div>
+                    <div class="cart-total">
+                        <strong>Total: $<span id="cart-total">0.00</span></strong>
+                    </div>
+                </div>
+                <div class="cart-actions">
+                    <button class="continue-shopping-btn" onclick="toggleCart()">Continue Shopping</button>
+                    <button class="checkout-btn">Checkout 🌺</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stripe Checkout Modal -->
+    <div id="checkout-modal" class="checkout-modal" style="display: none;">
+        <div class="checkout-content">
+            <div class="checkout-header">
+                <h2>🌺 Secure Checkout</h2>
+                <button class="close-checkout" onclick="toggleCheckout()">&times;</button>
+            </div>
+            <div class="checkout-body">
+                <div class="order-summary">
+                    <h3>Order Summary</h3>
+                    <div class="checkout-items" id="checkout-items"></div>
+                    <div class="checkout-total">
+                        <div class="total-line">
+                            <span>Subtotal: $<span id="checkout-subtotal">0.00</span></span>
+                        </div>
+                        <div class="total-line savings" id="checkout-savings" style="display: none;">
+                            <span>Savings: -$<span id="checkout-savings-amount">0.00</span></span>
+                        </div>
+                        <div class="total-line final">
+                            <strong>Total: $<span id="checkout-final-total">0.00</span></strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-form">
+                    <h3>Payment Details</h3>
+                    <form id="payment-form">
+                        <div class="form-group">
+                            <label for="customer-email">Email Address</label>
+                            <input type="email" id="customer-email" placeholder="your@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-name">Full Name</label>
+                            <input type="text" id="customer-name" placeholder="Your Full Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="card-element">Card Information</label>
+                            <div id="card-element">
+                                <!-- Stripe Elements will create form elements here -->
+                            </div>
+                            <div id="card-errors" role="alert"></div>
+                        </div>
+                        <button id="submit-payment" type="submit">
+                            <span id="button-text">Complete Payment 🌺</span>
+                            <div id="spinner" class="spinner hidden"></div>
+                        </button>
+                    </form>
+                    <div class="payment-security">
+                        <p>🔒 Your payment information is secure and encrypted</p>
+                        <p>💳 We accept all major credit cards</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Panel -->
+    <div id="notifications-panel" class="notifications-panel">
+        <div class="notifications-content">
+            <div class="notifications-header">
+                <h2>🔔 Updates & Notifications</h2>
+                <button class="close-notifications" onclick="toggleNotifications()">&times;</button>
+            </div>
+            <div class="notifications-body">
+                <div class="notification-item new">
+                    <div class="notification-icon">🎉</div>
+                    <div class="notification-content">
+                        <div class="notification-title">New Peppermint Candy Soap!</div>
+                        <div class="notification-text">Try our latest Cold Process Peppermint Candy Goat Milk Soap - perfect for the holidays!</div>
+                        <div class="notification-time">2 hours ago</div>
+                    </div>
+                </div>
+                
+                <div class="notification-item new">
+                    <div class="notification-icon">💰</div>
+                    <div class="notification-content">
+                        <div class="notification-title">Price Updates</div>
+                        <div class="notification-text">New pricing is live! Fruit Pack now $35.00 with even better savings on bundles.</div>
+                        <div class="notification-time">1 day ago</div>
+                    </div>
+                </div>
+                
+                <div class="notification-item new">
+                    <div class="notification-icon">⭐</div>
+                    <div class="notification-content">
+                        <div class="notification-title">Customer Review System</div>
+                        <div class="notification-text">You can now leave reviews! Share your experience with our soaps and help other customers.</div>
+                        <div class="notification-time">2 days ago</div>
+                    </div>
+                </div>
+                
+                <div class="notification-item">
+                    <div class="notification-icon">🛒</div>
+                    <div class="notification-content">
+                        <div class="notification-title">Enhanced Shopping Cart</div>
+                        <div class="notification-text">New shopping cart design with detailed product information and better checkout experience.</div>
+                        <div class="notification-time">3 days ago</div>
+                    </div>
+                </div>
+                
+                <div class="notification-item">
+                    <div class="notification-icon">🌟</div>
+                    <div class="notification-content">
+                        <div class="notification-title">Website Launch</div>
+                        <div class="notification-text">Welcome to Soap Smooth! Discover our handcrafted natural soaps made with love by Miya.</div>
+                        <div class="notification-time">1 week ago</div>
+                    </div>
+                </div>
+            </div>
+            <div class="notifications-footer">
+                <button class="mark-all-read-btn" onclick="markAllAsRead()">Mark All as Read</button>
+                <button class="clear-notifications-btn" onclick="clearOldNotifications()">Clear Old</button>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>making your skin dreams come true<br>soap smooth is the right soap for you</h1>
+                    <p>Dive into a natural paradise and let our handcrafted soaps take you to a land of pure cleanliness and nourishment.</p>
+                    <button class="cta-btn">DISCOVER MORE</button>
+                </div>
+                <div class="hero-image">
+                    <div class="soap-container">
+                        <div class="soap-bar soap-1"></div>
+                        <div class="soap-bar soap-2"></div>
+                        <div class="soap-bar soap-3"></div>
+                        <div class="soap-bar soap-4"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="products" class="popular-soaps">
+            <div class="section-header">
+                <h2>🌿 POPULAR NATURAL SOAPS</h2>
+                <button class="view-all-btn">VIEW ALL SOAPS</button>
+            </div>
+            <div class="soap-grid">
+                <div class="soap-item featured-product">
+                    <div class="soap-image watermelon"></div>
+                    <h3>WATERMELON 🍉</h3>
+                    <p class="soap-description">Scented with watermelon and poppy seeds</p>
+                    <p class="soap-details">HANDCRAFTED • 5 OZ</p>
+                    <div class="soap-price">$13.00</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('watermelon', 'WATERMELON 🍉', 13.00, 'ChatGPT Image Jul 24, 2025, 02_20_34 PM.png')">Add to Cart</button>
+                    <div class="soap-badge-new">NEW!</div>
+                </div>
+                <div class="soap-item">
+                    <div class="soap-image strawberry"></div>
+                    <h3>STRAWBERRY 🍓</h3>
+                    <p class="soap-description">Scented with strawberry and poppy seeds</p>
+                    <p class="soap-details">HANDCRAFTED • 5 OZ</p>
+                    <div class="soap-price">$10.99</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('strawberry', 'STRAWBERRY 🍓', 10.99, 'bf3f658b-96e3-4d69-9363-7554913fca98.png')">Add to Cart</button>
+                </div>
+                <div class="soap-item">
+                    <div class="soap-image kiwi-strawberry"></div>
+                    <h3>KIWI STRAWBERRY 🥝🍓</h3>
+                    <p class="soap-description">Scented with kiwi strawberry and poppy seeds</p>
+                    <p class="soap-details">HANDCRAFTED • 5 OZ</p>
+                    <div class="soap-price">$12.98</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('kiwistrawberry', 'KIWI STRAWBERRY 🥝🍓', 12.98, 'ChatGPT Image Jul 24, 2025, 02_57_55 PM.png')">Add to Cart</button>
+                </div>
+                <div class="soap-item">
+                    <div class="soap-image peppermint-candy"></div>
+                    <h3>PEPPERMINT CANDY 🍭</h3>
+                    <p class="soap-description">Cold Process Peppermint Candy Goat Milk Soap</p>
+                    <p class="soap-details">HANDCRAFTED • 5 OZ</p>
+                    <div class="soap-price">$14.10</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('peppermint', 'PEPPERMINT CANDY 🍭', 14.10, 'ChatGPT Image Jul 24, 2025, 04_27_06 PM.png')">Add to Cart</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="natural-benefits">
+            <div class="benefits-content">
+                <div class="benefits-text">
+                    <h2>TYPES OF NATURAL INGREDIENTS</h2>
+                    <p>We improve skin consistency, boost and balance moisture levels, and increase the perception of creamy mouthfeel!</p>
+                </div>
+                <div class="testimonial-badge">
+                    <div class="customer-avatars">
+                        <div class="avatar"></div>
+                        <div class="avatar"></div>
+                        <div class="avatar"></div>
+                    </div>
+                    <div class="rating">
+                        <span class="rating-number">&lt;1800+</span>
+                        <span class="rating-text">Customer Reviews</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ingredient-icon">🌸</div>
+        </section>
+
+        <section class="soap-packs">
+            <div class="packs-content">
+                <div class="packs-header">
+                    <h2>🎁 SOAP PACKS & BUNDLES</h2>
+                    <p>Save more with our curated soap collections!</p>
+                </div>
+                <div class="packs-grid">
+                    <div class="pack-item">
+                        <div class="pack-image trio-pack" onclick="showFruitPackModal()"></div>
+                        <h3>FRUIT PACK</h3>
+                        <p class="pack-description">All 3 fruit scents: Watermelon, Strawberry & Kiwi Strawberry</p>
+                        <div class="pack-savings">Save $1.97!</div>
+                        <div class="pack-price">
+                            <span class="original-price">$36.97</span>
+                            <span class="sale-price">$35.00</span>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addFruitPack()">Add to Cart</button>
+                    </div>
+                    <div class="pack-item">
+                        <div class="pack-image duo-pack"></div>
+                        <h3>DUO PACK</h3>
+                        <p class="pack-description">Choose any 2 soaps from our collection</p>
+                        <div class="pack-savings">Save $1.10!</div>
+                        <div class="pack-price">
+                            <span class="original-price">$22.08</span>
+                            <span class="sale-price">$20.98</span>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('duo-pack', 'DUO PACK 🎁', 20.98)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="exotic-soaps">
+            <h2>ARTISAN COLLECTIONS</h2>
+            <div class="exotic-grid">
+                <div class="exotic-item purple">
+                    <div class="soap-badge"></div>
+                </div>
+                <div class="exotic-item pink">
+                    <div class="soap-badge star"></div>
+                </div>
+                <div class="exotic-item orange">
+                    <div class="soap-badge circle"></div>
+                </div>
+                <div class="exotic-item yellow">
+                    <div class="soap-badge square"></div>
+                </div>
+                <div class="exotic-item green">
+                    <div class="soap-badge eco"></div>
+                </div>
+            </div>
+            <div class="navigation-arrows">
+                <button class="nav-arrow left">←</button>
+                <button class="nav-arrow right">→</button>
+            </div>
+        </section>
+
+        <section id="about" class="founder-story">
+            <div class="founder-content">
+                <div class="founder-image">
+                    <div class="founder-photo">
+                        <div class="founder-name">MIYA</div>
+                    </div>
+                </div>
+                <div class="founder-text">
+                    <h2>MEET MIYA - THE SOAP ARTISAN 🌺</h2>
+                    <p>Hello! My name is Miya and I'm a young entrepreneur with a passion for pure, natural beauty. I started Soap Smooth because I absolutely love making DIY soaps from scratch! 🧼✨</p>
+                    <p>When I discovered the terrible ingredients lurking in most commercial soaps, I knew I had to take action. That's when I said to myself: "I should create my own natural and eco-friendly soap brand!" And here we are - turning that dream into sudsy reality! 🌿💚</p>
+                    <div class="founder-actions">
+                        <button class="view-soaps-btn">EXPLORE MY SOAPS</button>
+                        <button class="find-store-btn">MY STORY</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reviews-section">
+            <div class="reviews-header">
+                <h2>⭐ CUSTOMER REVIEWS</h2>
+                <p>See what our customers are saying about Soap Smooth!</p>
+                <button class="write-review-btn" onclick="toggleReviewForm()">✍️ Write a Review</button>
+            </div>
+            
+            <div class="review-form-container" id="reviewFormContainer" style="display: none;">
+                <div class="review-form">
+                    <h3>Share Your Experience!</h3>
+                    <div class="form-group">
+                        <label for="reviewerName">Your Name:</label>
+                        <input type="text" id="reviewerName" placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewRating">Rating:</label>
+                        <div class="star-rating">
+                            <span class="star" data-rating="1">⭐</span>
+                            <span class="star" data-rating="2">⭐</span>
+                            <span class="star" data-rating="3">⭐</span>
+                            <span class="star" data-rating="4">⭐</span>
+                            <span class="star" data-rating="5">⭐</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewText">Your Review:</label>
+                        <textarea id="reviewText" placeholder="Share your thoughts about our soaps..." rows="4"></textarea>
+                        <div class="keyboard-options">
+                            <button type="button" class="keyboard-btn" onclick="toggleVirtualKeyboard()">⌨️ Virtual Keyboard</button>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="submit-review-btn" onclick="submitReview()">Submit Review</button>
+                        <button type="button" class="cancel-review-btn" onclick="toggleReviewForm()">Cancel</button>
+                    </div>
+                </div>
+                
+                <div class="virtual-keyboard" id="virtualKeyboard" style="display: none;">
+                    <div class="keyboard-row">
+                        <button class="key">q</button>
+                        <button class="key">w</button>
+                        <button class="key">e</button>
+                        <button class="key">r</button>
+                        <button class="key">t</button>
+                        <button class="key">y</button>
+                        <button class="key">u</button>
+                        <button class="key">i</button>
+                        <button class="key">o</button>
+                        <button class="key">p</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key">a</button>
+                        <button class="key">s</button>
+                        <button class="key">d</button>
+                        <button class="key">f</button>
+                        <button class="key">g</button>
+                        <button class="key">h</button>
+                        <button class="key">j</button>
+                        <button class="key">k</button>
+                        <button class="key">l</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key">z</button>
+                        <button class="key">x</button>
+                        <button class="key">c</button>
+                        <button class="key">v</button>
+                        <button class="key">b</button>
+                        <button class="key">n</button>
+                        <button class="key">m</button>
+                        <button class="key special" data-key="backspace">⌫</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key special" data-key="space">Space</button>
+                        <button class="key special" data-key="enter">Enter</button>
+                        <button class="key special" data-key="shift">Shift</button>
+                    </div>
+                </div>
+            </div>
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="review-text">"The watermelon soap smells absolutely amazing! My skin feels so soft and moisturized. Will definitely order again!"</p>
+                    <div class="reviewer-info">
+                        <strong>Sarah M.</strong>
+                        <span class="review-date">2 weeks ago</span>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="review-text">"Love the peppermint candy soap! The goat milk makes it so creamy and the scent is perfect. Great quality handmade soap!"</p>
+                    <div class="reviewer-info">
+                        <strong>Jessica L.</strong>
+                        <span class="review-date">1 week ago</span>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="review-text">"The fruit pack is incredible value! All three scents are wonderful and last so long. Miya's soaps are the best!"</p>
+                    <div class="reviewer-info">
+                        <strong>Michelle K.</strong>
+                        <span class="review-date">3 days ago</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Soap Smooth. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="checkout.js"></script>
+</body>
+</html>
