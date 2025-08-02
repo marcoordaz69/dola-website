@@ -44,6 +44,9 @@ class PerformanceOptimizer {
 
         // Preload hero images
         this.preloadHeroImages();
+        
+        // Preload featured images for better mobile performance
+        this.preloadFeaturedImages();
     }
 
     preloadHeroImages() {
@@ -57,6 +60,21 @@ class PerformanceOptimizer {
             link.as = 'image';
             link.href = img.src;
             document.head.appendChild(link);
+        });
+    }
+
+    preloadFeaturedImages() {
+        // Preload all featured images for critical loading
+        const featuredImages = document.querySelectorAll('.featured__block img');
+        featuredImages.forEach(img => {
+            if (img.src) {
+                const preloadLink = document.createElement('link');
+                preloadLink.rel = 'preload';
+                preloadLink.as = 'image';
+                preloadLink.href = img.src;
+                preloadLink.crossOrigin = 'anonymous';
+                document.head.appendChild(preloadLink);
+            }
         });
     }
 
@@ -117,16 +135,11 @@ class PerformanceOptimizer {
         const lazyImages = document.querySelectorAll('img[loading="lazy"]');
         lazyImages.forEach(img => imageObserver.observe(img));
 
-        // Setup lazy loading for featured images - but check if they're already visible
+        // Load featured images immediately since they're important content
         const featuredImages = document.querySelectorAll('.featured__block img');
         featuredImages.forEach(img => {
-            // If image is already in viewport, load immediately
-            const rect = img.getBoundingClientRect();
-            if (rect.top < window.innerHeight) {
-                this.loadImage(img);
-            } else {
-                imageObserver.observe(img);
-            }
+            // Always load featured images immediately for better mobile experience
+            this.loadImage(img);
         });
     }
 
