@@ -11,7 +11,8 @@ class PerformanceOptimizer {
         this.setupImageOptimization();
         this.setupPrefetching();
         this.monitorPerformance();
-        this.setupServiceWorker();
+        // this.setupServiceWorker(); // Disabled since sw.js doesn't exist
+        this.setupImageAutoRefresh();
     }
 
     setupCriticalResourceLoading() {
@@ -163,6 +164,11 @@ class PerformanceOptimizer {
                 img.classList.remove('image-loading');
                 img.classList.add('image-error');
                 img.style.opacity = '0.3';
+                
+                // Auto-retry after 2 seconds
+                setTimeout(() => {
+                    this.retryImageLoad(img, imageSrc);
+                }, 2000);
             };
 
             // Start loading
@@ -186,9 +192,55 @@ class PerformanceOptimizer {
                     img.classList.remove('image-loading');
                     img.classList.add('image-error');
                     img.style.opacity = '0.3';
+                    
+                    // Auto-retry after 2 seconds
+                    setTimeout(() => {
+                        this.retryImageLoad(img, img.src);
+                    }, 2000);
                 }, { once: true });
             }
         }
+    }
+
+    retryImageLoad(img, imageSrc, attempt = 1, maxAttempts = 3) {
+        // Don't retry if max attempts reached
+        if (attempt > maxAttempts) {
+            console.warn(`Failed to load image after ${maxAttempts} attempts:`, imageSrc);
+            return;
+        }
+
+        // Reset classes for retry
+        img.classList.remove('image-error');
+        img.classList.add('image-loading');
+
+        // Create new image for retry
+        const retryImg = new Image();
+        
+        retryImg.onload = () => {
+            img.src = retryImg.src;
+            img.classList.remove('image-loading');
+            img.classList.add('image-loaded');
+            
+            requestAnimationFrame(() => {
+                img.style.opacity = '1';
+            });
+        };
+
+        retryImg.onerror = () => {
+            img.classList.remove('image-loading');
+            img.classList.add('image-error');
+            img.style.opacity = '0.3';
+            
+            // Retry with exponential backoff
+            const delay = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s...
+            setTimeout(() => {
+                this.retryImageLoad(img, imageSrc, attempt + 1, maxAttempts);
+            }, delay);
+        };
+
+        // Add cache buster to force reload
+        const separator = imageSrc.includes('?') ? '&' : '?';
+        retryImg.src = `${imageSrc}${separator}t=${Date.now()}`;
     }
 
     setupScrollBasedLazyLoading() {
@@ -267,11 +319,12 @@ class PerformanceOptimizer {
     }
 
     setupWebPSupport() {
-        // Check WebP support
+        // Check WebP support but don't auto-convert since we don't have WebP files
         this.supportsWebP().then(supported => {
             if (supported) {
                 document.body.classList.add('webp-supported');
-                this.convertImagesToWebP();
+                // Disabled auto-conversion since WebP files don't exist
+                // this.convertImagesToWebP();
             }
         });
     }
@@ -583,6 +636,30 @@ class PerformanceOptimizer {
                 });
             };
         }
+    }
+
+    setupImageAutoRefresh() {
+        // Periodically check for failed images and retry loading them
+        setInterval(() => {
+            const failedImages = document.querySelectorAll('img.image-error');
+            failedImages.forEach(img => {
+                // Only retry if image is visible in viewport
+                const rect = img.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    this.retryImageLoad(img, img.src, 1, 2); // Retry with max 2 attempts
+                }
+            });
+        }, 5000); // Check every 5 seconds
+        
+        // Also check when page becomes visible again (user returns to tab)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                const failedImages = document.querySelectorAll('img.image-error');
+                failedImages.forEach(img => {
+                    this.retryImageLoad(img, img.src, 1, 1); // Single retry attempt
+                });
+            }
+        });
     }
 }
 

@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#FF3B4E">
     <title>DOLA - Don't Overlook Living Alone</title>
     <meta name="description" content="DOLA streetwear and lifestyle brand - premium graphic tees and exclusive drops">
     
@@ -47,8 +48,19 @@
                 </svg>
             </a>
             
+            <!-- Mobile menu button -->
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
             <nav class="header__nav" aria-label="Main navigation">
                 <ul class="nav-list">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/shop.html" class="nav-link">Shop</a></li>
+                    <li><a href="#" class="nav-link">About</a></li>
+                    <li><a href="#" class="nav-link">Contact</a></li>
                 </ul>
             </nav>
             
@@ -328,6 +340,7 @@
     <script src="scripts/performance.js"></script>
     <script src="scripts/accessibility.js"></script>
     <script src="scripts/skeleton.js"></script>
+    <script src="scripts/mobile-nav.js"></script>
     <script src="scripts/cart.js"></script>
     <script src="scripts/products.js"></script>
 </body>
