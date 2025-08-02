@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Data Debug</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #1a1a1a; 
+            color: #fff; 
+        }
+        .debug-section { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #666; 
+            border-radius: 5px; 
+        }
+        button { 
+            background: #ff3b4e; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            margin: 5px; 
+            border-radius: 3px; 
+            cursor: pointer; 
+        }
+        button:hover { 
+            background: #e02d3f; 
+        }
+        pre { 
+            background: #333; 
+            padding: 10px; 
+            border-radius: 3px; 
+            overflow-x: auto; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Cart Data Debug Tool</h1>
+    
+    <div class="debug-section">
+        <h2>LocalStorage Cart Data</h2>
+        <button onclick="showCartData()">Show Current Cart Data</button>
+        <button onclick="clearCartData()">Clear Cart Data</button>
+        <button onclick="addTestItem()">Add Test Item</button>
+        <pre id="cartDataDisplay">Click "Show Current Cart Data" to see localStorage content</pre>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Test Navigation</h2>
+        <button onclick="goToHome()">Go to Home Page</button>
+        <button onclick="goToCheckout()">Go to Checkout Page</button>
+        <p>Current URL: <span id="currentUrl"></span></p>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Manual Cart Testing</h2>
+        <button onclick="testCartFlow()">Test Full Cart Flow</button>
+        <div id="testResults"></div>
+    </div>
+
+    <script>
+        // Display current URL
+        document.getElementById('currentUrl').textContent = window.location.href;
+        
+        function showCartData() {
+            const cartData = localStorage.getItem('cart');
+            const display = document.getElementById('cartDataDisplay');
+            
+            if (cartData) {
+                try {
+                    const parsed = JSON.parse(cartData);
+                    display.textContent = `Raw: ${cartData}\n\nParsed: ${JSON.stringify(parsed, null, 2)}\n\nLength: ${parsed.length}`;
+                } catch (e) {
+                    display.textContent = `Error parsing cart data: ${e.message}\nRaw data: ${cartData}`;
+                }
+            } else {
+                display.textContent = 'No cart data found in localStorage';
+            }
+        }
+        
+        function clearCartData() {
+            localStorage.removeItem('cart');
+            showCartData();
+            console.log('Cart data cleared');
+        }
+        
+        function addTestItem() {
+            const testItem = {
+                id: 'test-soap-red',
+                title: 'Test DOLA Soap',
+                price: '$19.99',
+                image: 'images/products/soap1.jpg',
+                color: '#ff0000',
+                colorLabel: 'Red',
+                quantity: 1,
+                timestamp: Date.now()
+            };
+            
+            let cart = [];
+            try {
+                cart = JSON.parse(localStorage.getItem('cart')) || [];
+            } catch (e) {
+                console.error('Error loading existing cart:', e);
+            }
+            
+            cart.push(testItem);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            console.log('Test item added to cart');
+            showCartData();
+        }
+        
+        function goToHome() {
+            window.location.href = 'index.html';
+        }
+        
+        function goToCheckout() {
+            window.location.href = 'checkout.html';
+        }
+        
+        function testCartFlow() {
+            const results = document.getElementById('testResults');
+            results.innerHTML = '<h3>Testing Cart Flow...</h3>';
+            
+            // Step 1: Clear cart
+            localStorage.removeItem('cart');
+            results.innerHTML += '<p>✓ Step 1: Cleared cart</p>';
+            
+            // Step 2: Add test item
+            const testItem = {
+                id: 'flow-test-soap',
+                title: 'Flow Test Soap',
+                price: '$25.00',
+                image: 'images/products/soap2.jpg',
+                color: '#00ff00',
+                colorLabel: 'Green',
+                quantity: 2,
+                timestamp: Date.now()
+            };
+            
+            localStorage.setItem('cart', JSON.stringify([testItem]));
+            results.innerHTML += '<p>✓ Step 2: Added test item to cart</p>';
+            
+            // Step 3: Verify storage
+            const stored = localStorage.getItem('cart');
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    results.innerHTML += `<p>✓ Step 3: Verified storage - ${parsed.length} items found</p>`;
+                    results.innerHTML += `<pre>${JSON.stringify(parsed, null, 2)}</pre>`;
+                } catch (e) {
+                    results.innerHTML += `<p>✗ Step 3: Error parsing stored data: ${e.message}</p>`;
+                }
+            } else {
+                results.innerHTML += '<p>✗ Step 3: No data found in storage</p>';
+            }
+            
+            // Step 4: Instructions
+            results.innerHTML += '<h4>Next Steps:</h4>';
+            results.innerHTML += '<p>1. Click "Go to Checkout Page" to test data transfer</p>';
+            results.innerHTML += '<p>2. Open browser console to see debug logs</p>';
+            results.innerHTML += '<p>3. Check if items appear in checkout</p>';
+        }
+        
+        // Auto-show cart data on page load
+        window.addEventListener('load', () => {
+            showCartData();
+        });
+    </script>
+</body>
+</html>

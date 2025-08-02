@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - DOLA</title>
+    <meta name="description" content="Complete your DOLA purchase - secure checkout process">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components/checkout.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Checkout - DOLA">
+    <meta property="og:description" content="Complete your DOLA purchase">
+    <meta property="og:type" content="website">
+</head>
+<body>
+    <!-- Skip Navigation for Accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="header__container">
+            <a href="index.html" class="header__logo" aria-label="DOLA Home">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Simplified bunny logo with X eyes -->
+                    <path d="M24 8C28 8 32 12 32 16V20C32 24 28 28 24 28C20 28 16 24 16 20V16C16 12 20 8 24 8Z" fill="white"/>
+                    <circle cx="20" cy="18" r="2" fill="#1A1A1A"/>
+                    <circle cx="28" cy="18" r="2" fill="#1A1A1A"/>
+                    <!-- X marks on eyes -->
+                    <path d="M18 16L22 20M22 16L18 20" stroke="#FF3B4E" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M26 16L30 20M30 16L26 20" stroke="#FF3B4E" stroke-width="1.5" stroke-linecap="round"/>
+                    <!-- Ears -->
+                    <ellipse cx="18" cy="12" rx="3" ry="6" fill="white"/>
+                    <ellipse cx="30" cy="12" rx="3" ry="6" fill="white"/>
+                </svg>
+            </a>
+            
+            <nav class="header__nav" aria-label="Main navigation">
+                <ul class="nav-list">
+                </ul>
+            </nav>
+            
+            <div class="header__actions">
+                <button class="icon-button" aria-label="Search" type="button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+                <button class="icon-button cart-button" aria-label="Shopping cart" type="button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z"></path>
+                        <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z"></path>
+                        <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6"></path>
+                    </svg>
+                    <span class="cart-badge" aria-hidden="true" style="display: none;">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="checkout-main">
+        <!-- Checkout Hero Section -->
+        <section class="checkout-hero">
+            <div class="checkout-hero__background">
+                <!-- Abstract paint background similar to main hero -->
+            </div>
+            <div class="container">
+                <div class="checkout-hero__content">
+                    <h1 class="checkout-hero__title">Checkout</h1>
+                    <p class="checkout-hero__subtitle">Complete your DOLA purchase</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Checkout Content -->
+        <section class="checkout-content">
+            <div class="container">
+                <div class="checkout-layout">
+                    <!-- Order Summary -->
+                    <div class="checkout-summary">
+                        <div class="checkout-summary__header">
+                            <h2 class="checkout-summary__title">Order Summary</h2>
+                        </div>
+                        <div class="checkout-summary__items" id="checkoutItems">
+                            <!-- Items will be populated by JavaScript -->
+                        </div>
+                        <div class="checkout-summary__totals">
+                            <div class="checkout-total-row">
+                                <span class="checkout-total-label">Subtotal</span>
+                                <span class="checkout-total-value" id="checkoutSubtotal">$0.00</span>
+                            </div>
+                            <div class="checkout-total-row">
+                                <span class="checkout-total-label">Shipping</span>
+                                <span class="checkout-total-value" id="checkoutShipping">Free</span>
+                            </div>
+                            <div class="checkout-total-row">
+                                <span class="checkout-total-label">Tax</span>
+                                <span class="checkout-total-value" id="checkoutTax">$0.00</span>
+                            </div>
+                            <div class="checkout-total-row checkout-total-row--final">
+                                <span class="checkout-total-label">Total</span>
+                                <span class="checkout-total-value" id="checkoutTotal">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Checkout Form -->
+                    <div class="checkout-form">
+                        <form id="checkoutForm" novalidate>
+                            <!-- Contact Information -->
+                            <div class="checkout-section">
+                                <h2 class="checkout-section__title">Contact Information</h2>
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email Address <span class="required">*</span></label>
+                                    <input type="email" id="email" name="email" class="form-input" required autocomplete="email">
+                                    <div class="form-error" id="email-error"></div>
+                                </div>
+                                <div class="form-checkbox">
+                                    <input type="checkbox" id="newsletter" name="newsletter" class="checkbox-input">
+                                    <label for="newsletter" class="checkbox-label">Subscribe to our newsletter for updates and exclusive offers</label>
+                                </div>
+                            </div>
+
+                            <!-- Shipping Address -->
+                            <div class="checkout-section">
+                                <h2 class="checkout-section__title">Shipping Address</h2>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="firstName" class="form-label">First Name <span class="required">*</span></label>
+                                        <input type="text" id="firstName" name="firstName" class="form-input" required autocomplete="given-name">
+                                        <div class="form-error" id="firstName-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName" class="form-label">Last Name <span class="required">*</span></label>
+                                        <input type="text" id="lastName" name="lastName" class="form-input" required autocomplete="family-name">
+                                        <div class="form-error" id="lastName-error"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="address" class="form-label">Address <span class="required">*</span></label>
+                                    <input type="text" id="address" name="address" class="form-input" required autocomplete="street-address">
+                                    <div class="form-error" id="address-error"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="apartment" class="form-label">Apartment, suite, etc. (optional)</label>
+                                    <input type="text" id="apartment" name="apartment" class="form-input" autocomplete="address-line2">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="city" class="form-label">City <span class="required">*</span></label>
+                                        <input type="text" id="city" name="city" class="form-input" required autocomplete="address-level2">
+                                        <div class="form-error" id="city-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="state" class="form-label">State <span class="required">*</span></label>
+                                        <select id="state" name="state" class="form-select" required autocomplete="address-level1">
+                                            <option value="">Select State</option>
+                                            <option value="CA">California</option>
+                                            <option value="NY">New York</option>
+                                            <option value="TX">Texas</option>
+                                            <!-- Add more states as needed -->
+                                        </select>
+                                        <div class="form-error" id="state-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="zipCode" class="form-label">ZIP Code <span class="required">*</span></label>
+                                        <input type="text" id="zipCode" name="zipCode" class="form-input" required autocomplete="postal-code">
+                                        <div class="form-error" id="zipCode-error"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payment Information -->
+                            <div class="checkout-section">
+                                <h2 class="checkout-section__title">Payment Information</h2>
+                                <div class="payment-methods">
+                                    <div class="payment-method">
+                                        <input type="radio" id="card" name="paymentMethod" value="card" class="payment-radio" checked>
+                                        <label for="card" class="payment-label">
+                                            <span class="payment-icon">💳</span>
+                                            Credit / Debit Card
+                                        </label>
+                                    </div>
+                                    <div class="payment-method">
+                                        <input type="radio" id="paypal" name="paymentMethod" value="paypal" class="payment-radio">
+                                        <label for="paypal" class="payment-label">
+                                            <span class="payment-icon">🏦</span>
+                                            PayPal
+                                        </label>
+                                    </div>
+                                    <div class="payment-method">
+                                        <input type="radio" id="apple-pay" name="paymentMethod" value="apple-pay" class="payment-radio">
+                                        <label for="apple-pay" class="payment-label">
+                                            <span class="payment-icon">📱</span>
+                                            Apple Pay
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Card Payment Fields -->
+                                <div id="cardPaymentFields" class="payment-fields">
+                                    <div class="form-group">
+                                        <label for="cardNumber" class="form-label">Card Number <span class="required">*</span></label>
+                                        <input type="text" id="cardNumber" name="cardNumber" class="form-input" placeholder="1234 5678 9012 3456" autocomplete="cc-number">
+                                        <div class="form-error" id="cardNumber-error"></div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="expiryDate" class="form-label">Expiry Date <span class="required">*</span></label>
+                                            <input type="text" id="expiryDate" name="expiryDate" class="form-input" placeholder="MM/YY" autocomplete="cc-exp">
+                                            <div class="form-error" id="expiryDate-error"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cvv" class="form-label">CVV <span class="required">*</span></label>
+                                            <input type="text" id="cvv" name="cvv" class="form-input" placeholder="123" autocomplete="cc-csc">
+                                            <div class="form-error" id="cvv-error"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cardName" class="form-label">Name on Card <span class="required">*</span></label>
+                                        <input type="text" id="cardName" name="cardName" class="form-input" autocomplete="cc-name">
+                                        <div class="form-error" id="cardName-error"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Alternative Payment Fields (hidden by default) -->
+                                <div id="paypalFields" class="payment-fields" style="display: none;">
+                                    <div class="payment-placeholder">
+                                        <p>You will be redirected to PayPal to complete your payment.</p>
+                                    </div>
+                                </div>
+
+                                <div id="applePayFields" class="payment-fields" style="display: none;">
+                                    <div class="payment-placeholder">
+                                        <p>Use Touch ID or Face ID to pay with Apple Pay.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Order Actions -->
+                            <div class="checkout-actions">
+                                <button type="button" class="btn btn--ghost btn--large" onclick="history.back()">
+                                    ← Back to Cart
+                                </button>
+                                <button type="submit" class="btn btn--checkout btn--large" id="placeOrderBtn">
+                                    <span class="btn-text">Place Order</span>
+                                    <span class="btn-spinner spinner" style="display: none;"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__newsletter">
+                    <h2 class="footer__title">Join Our Newsletter</h2>
+                    <p class="footer__subtitle">Subscribe to receive</p>
+                    <form class="newsletter-form" aria-label="Newsletter signup">
+                        <label for="footer-email" class="sr-only">Email Address</label>
+                        <input type="email" 
+                               id="footer-email" 
+                               class="newsletter-form__input" 
+                               placeholder="Email Address"
+                               required 
+                               autocomplete="email">
+                        <button type="submit" class="btn btn--primary newsletter-form__submit">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+                <div class="footer__social">
+                    <a href="https://twitter.com/dola" class="social-link" aria-label="Follow us on Twitter">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                        </svg>
+                    </a>
+                    <a href="https://instagram.com/dola" class="social-link" aria-label="Follow us on Instagram">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                            <path d="m16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                        </svg>
+                    </a>
+                    <a href="https://facebook.com/dola" class="social-link" aria-label="Follow us on Facebook">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                        </svg>
+                    </a>
+                    <a href="https://youtube.com/dola" class="social-link" aria-label="Subscribe to our YouTube channel">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.33z"/>
+                            <polygon points="9.75,15.02 15.5,11.75 9.75,8.48"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="scripts/accessibility.js"></script>
+    <script src="scripts/skeleton.js"></script>
+    <script src="scripts/cart.js"></script>
+    <script src="scripts/checkout.js"></script>
+</body>
+</html>

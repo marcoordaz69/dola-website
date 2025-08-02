@@ -1,0 +1,19 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#FF3B4E"/>
+  
+  <!-- Bunny head -->
+  <ellipse cx="16" cy="18" rx="8" ry="6" fill="#FFFFFF"/>
+  
+  <!-- Ears -->
+  <ellipse cx="11" cy="10" rx="1.5" ry="4" fill="#FFFFFF"/>
+  <ellipse cx="21" cy="10" rx="1.5" ry="4" fill="#FFFFFF"/>
+  
+  <!-- X eyes -->
+  <g stroke="#FF3B4E" stroke-width="1.2" stroke-linecap="round">
+    <line x1="12" y1="16" x2="14" y2="18"/>
+    <line x1="14" y1="16" x2="12" y2="18"/>
+    <line x1="18" y1="16" x2="20" y2="18"/>
+    <line x1="20" y1="16" x2="18" y2="18"/>
+  </g>
+</svg>

@@ -1,0 +1,19 @@
+{
+  "name": "dola-website",
+  "version": "1.0.0",
+  "description": "DOLA streetwear website - static site",
+  "scripts": {
+    "start": "python3 serve.py",
+    "serve": "python3 serve.py",
+    "dev": "python3 serve.py"
+  },
+  "keywords": ["website", "static", "streetwear", "dola"],
+  "author": "DOLA Team",
+  "license": "MIT",
+  "devDependencies": {},
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
