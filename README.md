@@ -1,4 +1,4 @@
-# 🧼 Soap Smooth - Stripe Payment Integration
+#Dola website - Stripe Payment Integration
 
 A beautiful e-commerce website for handmade natural soaps with full Stripe payment processing integration.
 
